@@ -39,7 +39,7 @@ git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/0-templates
 popd
 #
 # Add /opt/code/github/threefoldtech/jumpscale_core/cmds to path
-echo "export \$PATH:/opt/code/github/threefoldtech/jumpscale_core/cmds" >> /root/.profile
+echo "export PATH=\$PATH:/opt/code/github/threefoldtech/jumpscale_core/cmds" >> /root/.profile
 
 # ensure jumpscale is well configured
 js_shell 'print(j.core.dirs)'
