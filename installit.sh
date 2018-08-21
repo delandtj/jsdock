@@ -17,27 +17,30 @@ mkdir -p /opt/code/github/threefoldtech
 mkdir -p /root/.ssh
 pushd /opt/code/github/threefoldtech
 
-
 # settings
 export BRANCH="development"
+export MODULES="jumpscale_core jumpscale_lib jumpscale_prefab digital_me 0-robot"
+
 
 # cloning source code Jumpscale stuff
-for target in core lib; do
-    git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/jumpscale_${target}
+for target in ${MODULES}; do
+    git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/${target}
 done
 
 # installing core and plugins
-for target in jumpscale_core jumpscale_lib; do
+for target in ${MODULES}; do
     pushd ${target}
     pip3 install -e .
     popd
 done
+# before last pop, add 0-templates
+git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/0-templates
 
 popd
-
-# zrobot
-pushd /opt/code/github/threefoldtech
-./utils/zrobot_install.sh
+#
+# Add /opt/code/github/threefoldtech/jumpscale_core/cmds to path
+echo "export \$PATH:/opt/code/github/threefoldtech/jumpscale_core/cmds" >> /root/.profile
 
 # ensure jumpscale is well configured
 js_shell 'print(j.core.dirs)'
+
