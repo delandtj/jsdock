@@ -6,7 +6,9 @@ ARG ssh_pub_key
 
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get install -y curl python3-pip python3-dev git \
-	pkg-config libvirt-dev sudo libssl-dev libffi-dev locales vim ssh
+	pkg-config libvirt-dev sudo libssl-dev libffi-dev locales vim ssh \
+  iproute2 bash-completion inetutils-ping inetutils-telnet inetutils-tools \
+  inetutils-traceroute
 
 
 # ssh stuff
