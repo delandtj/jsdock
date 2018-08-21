@@ -4,10 +4,10 @@ FROM ubuntu:latest
 ARG ssh_prv_key
 ARG ssh_pub_key
 
-RUN apt-get update && apt-get install -y curl python3-pip python3-dev git \
+RUN apt-get update && apt-get upgrade
+RUN apt-get install -y curl python3-pip python3-dev git \
 	pkg-config libvirt-dev sudo libssl-dev libffi-dev locales vim ssh
 
-ADD installit.sh /
 
 # ssh stuff
 RUN mkdir -p /root/.ssh && \
@@ -21,6 +21,8 @@ RUN echo "$ssh_prv_key" > /root/.ssh/id_rsa && \
 RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 
 # OK, now add jumpy stuff
+ADD installit.sh /
 RUN /installit.sh
 
+# Or whatwver (robot maybe)?
 CMD ["bash"]
