@@ -13,30 +13,32 @@ touch /root/.iscontainer
 
 # settigng up directories layout
 mkdir -p /host
-mkdir -p /opt/code/github/threefoldtech
 mkdir -p /root/.ssh
-pushd /opt/code/github/threefoldtech
 
 # settings
 export BRANCH="development"
 export MODULES="jumpscale_core jumpscale_lib jumpscale_prefab digital_me 0-robot"
 
-
 # cloning source code Jumpscale stuff
-for target in ${MODULES}; do
-    git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/${target}
-done
+if [ ! -d "/opt/code/github/threefoldtech" ] ; then
+	mkdir -p /opt/code/github/threefoldtech
+	pushd /opt/code/github/threefoldtech
+	for target in ${MODULES}; do
+		git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/${target}
+	done
 
-# installing core and plugins
-for target in ${MODULES}; do
-    pushd ${target}
-    pip3 install -e .
-    popd
-done
-# before last pop, add 0-templates
-git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/0-templates
+	# installing core and plugins
+	for target in ${MODULES}; do
+		pushd ${target}
+		pip3 install -e .
+		popd
+	done
 
-popd
+	# before last pop, add 0-templates
+	git clone --depth=1 -b ${BRANCH} https://github.com/threefoldtech/0-templates
+
+	popd
+fi
 #
 # Add /opt/code/github/threefoldtech/jumpscale_core/cmds to path
 echo "export PATH=\$PATH:/opt/code/github/threefoldtech/jumpscale_core/cmds" >> /root/.profile
