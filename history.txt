@@ -1,0 +1,255 @@
+In [65]: %history -g
+ 1/1: cl = j.clients.zos.get?
+ 1/2: cl = j.clients.zos.get(host='172.29.51.96')
+ 1/3: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 1/4: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 1/5: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 1/6: cl.get_ip_from_nic()
+ 1/7: cl.get_ip_from_nic(?
+ 1/8: cl.get_ip_from_nic?
+ 1/9: cl.containers?
+1/10: cl.containers()
+1/11: cl.containers.list()
+1/12: cl.capacity?
+1/13: cl.capacity()
+1/14: cl.capacity.hw_info()
+1/15: hw = cl.capacity.hw_info()
+1/16: cl.disks.list()
+1/17: cl.disks.get_device?
+1/18: cl.disks.get_device('sda')
+1/19: node = j.clients.zos.list()
+1/20: node
+1/21: node = j.clients.zos.get?
+ 2/1: vim
+ 2/2: !vim
+ 3/1: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 3/2: cl.containers.list()
+ 3/3: cl.containers.list()
+ 3/4: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 3/5: cl.containers.list()
+ 4/1: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 4/2: cl.containers.list()
+ 4/3: cl.containers.list()
+ 4/4: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 4/5: cl.containers.list()
+ 4/6: iyo = j.clients.itsyouonline.get()
+ 4/7: iyo.jwt_get?
+ 4/8: jwt = iyo.jwt_get(validity=None, refreshable=True, scope='threefold.sysadmin', use_cache=False)
+ 4/9: jwt = iyo.jwt_get(validity=None, refreshable=True, scope='user:memberof:threefold.sysadmin', use_cache=False)
+4/10: iyo = j.clients.itsyouonline.get()
+4/11: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
+4/12: iyo = j.clients.itsyouonline.get()
+4/13: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
+ 5/1: iyo = j.clients.itsyouonline.get()
+ 5/2: iyo.configure
+ 5/3: iyo.configure?
+ 5/4: j.clients.itsyouonline.delete()
+ 5/5: iyo = j.clients.itsyouonline.get()
+ 5/6: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
+ 5/7: cl.containers.list()
+ 5/8: j.clients.itsyouonline.list()
+ 5/9: j.clients.itsyouonline.delete?
+5/10: j.clients.itsyouonline.delete(instance='main')
+5/11: j.clients.itsyouonline.list()
+5/12: iyo = j.clients.itsyouonline.get()
+5/13: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
+5/14: jwt
+5/15: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+5/16: cl
+5/17: cl = j.clients.zos.get?
+5/18: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+5/19: cl.client.config.data_set('jwt_', jwt)
+5/20: cl.client.config.data_set('password_', jwt)
+5/21: cl.client.config.data
+5/22: cl.containers.list()
+5/23: %history
+5/24: iyo.config.data.get()
+5/25: iyo.config.data?
+5/26: iyo.config.data.?
+5/27: iyo.config.data.values()
+5/28: cl.containers.list()
+5/29: iyo.config.data.get()
+5/30: cl.client.config.data
+5/31: cl.capacity
+5/32: cl.capacity.disk_info
+5/33: cl.capacity
+5/34: cl.capacity.hw_info
+5/35: cl.capacity.reality_report
+5/36: cl.capacity.reality_report?
+5/37: cl.capacity.reality_report()
+5/38: cl.addr.count
+5/39: cl.addr.count()
+5/40: cl.get_nic_hwaddr_and_ip()
+5/41: cl.get_nic_hwaddr_and_ip?
+5/42: cl.get_ip_from_nic('ens1')
+5/43: cl.get_ip_from_nic(1)
+5/44: cl.get_ip_from_nic?
+ 6/1: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 6/2: cl.client.config.data
+ 6/3: j.tools.configmanager.path
+ 6/4: sshclient = j.clients.ssh.get('instance_name', interactive=True)
+ 6/5: j.clients.zerotier.configure?
+ 6/6: mazraa = j.clients.zerotier.configure(instance='mazraa',token='9f77fc393ef00142',interactive=True)
+ 6/7: mazraa.client.status()
+ 6/8: mazraa.client.status.getStatus
+ 6/9: mazraa.client.status.getStatus()
+6/10: mazraa.client.get?
+6/11: mazraa.config_check()
+6/12: mazraa.config_check
+6/13:
+mazraa.config.data_set(instance='mazraa',token='Z8X1tvFZbwpmWarEFFNryU4ASZ7naJtx
+',networkid_default='9f77fc393ef00142')
+6/14: mazraa.config.data_set(instance='mazraa',token='Z8X1tvFZbwpmWarEFFNryU4ASZ7naJtx',networkid_default='9f77fc393ef00142')
+6/15: mazraa.config.data_set(token='Z8X1tvFZbwpmWarEFFNryU4ASZ7naJtx',networkid_default='9f77fc393ef00142')
+6/16: mazraa = j.clients.zerotier.configure(instance='mazraa',token='Z8X1tvFZbwpmWarEFFNryU4ASZ7naJtx',networkid_default='9f77fc393ef00142')
+6/17: mazraa.instance?
+6/18: mazraa.instance
+6/19: mazraa.client.status?
+6/20: mazraa.client.get?
+6/21: zb=j.clients.ssh.get?
+ 7/1: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 7/2: cl.client.bash?
+ 7/3: print(cl.client.bash('ip a'))
+ 7/4: print(cl.client.bash('ip a'))
+ 7/5: print(cl.client.bash('ip a'))
+ 8/1: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 8/2: print(cl.client.bash('ip a'))
+ 8/3: !ip a
+ 8/4: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+ 8/5: cl.ping()
+ 8/6: cl.client.ip.addr?
+ 8/7: cl.client.ip.addr
+ 8/8: ip=cl.client.ip.addr
+ 8/9: ip.list
+8/10: ip.list()
+8/11: ip.list?
+8/12: ip.list(link="1")
+8/13: ip.list(link="1")
+8/14: cl.ping()
+8/15: cl.capacity.hw_info()
+8/16: cl.capacity.hw_info.get()
+8/17: cl.capacity.hw_info.get?
+8/18: cl.capacity.disk_info()
+8/19: cl.disks.list()
+8/20: cl.client.bash('ip a').get()
+8/21: cl.disks.list()
+8/22: cl.disks.get(?
+8/23: cl.disks.get?
+8/24: cl.disks.get('sda')
+8/25: d = cl.disks.get('sda')
+8/26: mazraa = j.clients.zos.get('boot', data={'host' : '172.22.86.37'})
+8/27: mazraa.is_running
+8/28: mazraa.is_running()
+8/29: mazraa = j.clients.zos.get('boot', data={'host' : '172.22.86.37'})
+8/30: cl.client.zerotier.info
+8/31: cl.client.zerotier.info().get()
+8/32: cl.client.zerotier.info?
+8/33: cl.client.zerotier.info()
+8/34: cl.client.config
+8/35: type(cl.client.config)
+8/36: type(cl.client)
+8/37: koen = j.clients.zos.get('koen', data={'host' : '10.102.232.63'})
+8/38: koen.client.ping()
+8/39: koen.client.ping()
+8/40: koen.client.bash('cat /proc/cpuinfo').get()
+8/41: koen.client.bash('cat /proc/meminfo').get()
+8/42: koen.client.bash('cat /proc/partitions').get()
+8/43: koen.client.bash('cat /sys/block/sda/queue/rotational').get()
+8/44: koen.client.ping()
+8/45: koen.client.ping()
+10/1: koen = j.clients.zos.get('koen', data={'host' : '10.102.232.63'})
+10/2: koen.client.ping()
+11/1: koen = j.clients.zos.get('koen', data={'host' : '10.102.232.63'})
+11/2: koen.client.ping()
+11/3: koen.client.bash('ip -br l').get()
+11/4: koen.client.bash('ip -br a').get()
+12/1: koen = j.clients.zos.get('koen', data={'host' : '10.102.232.63'})
+12/2: koen.client.bash('ip -br a').get()
+12/3: !ip a
+12/4: koen.client.bash('ip -br a').get()
+12/5: unknown = j.clients.zos.get('unknown', data={'host' : '10.102.114.32'})
+12/6: unknown.client.bash("ls -l /dev/").get()
+12/7: unknown.client.ping()
+12/8: unknown = j.clients.zos.get('unknown', data={'host' : '10.102.166.71'})
+12/9: unknown.client.ping()
+12/10: unknown = j.clients.zos.get('unknown', data={'host' : '10.102.183.67'})
+12/11: unknown.client.ping()
+12/12: !ping 10.102.166.71
+13/1: unknown = j.clients.zos.get('unknown', data={'host' : '10.102.166.71'})
+13/2: unknown.client.ping()
+13/3: !ping 10.102.166.71
+13/4: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+13/5: cl.client.ping()
+13/6: cl.client.bash("ls -l /dev/").get()
+15/1: cl = j.clients.zos.get('node1', data={'host' : '172.29.51.96'})
+15/2: cl.clients.ping()
+15/3: cl.client.ping()
+15/4: cl.client.bash("ip a").get()
+15/5: cl.client.bash("sysctl").get()
+15/6: cl.client.bash("sysctl -a").get()
+15/7: cl.client.bash("sysctl -w net.ipv6.conf.enp1s0.disable_ipv6=0").get()
+15/8: cl.client.bash("ip a").get()
+15/9: cl.client.bash("ip a").get()
+   1: %history
+   2: %hist
+   3: pirint(%history)
+   4: print(%history)
+   5: j.tools.configmanager.path
+   6: iyo = j.clients.itsyouonline.get()
+   7: j.tools.configmanager.?
+   8: j.tools.configmanager.path
+   9: !ls /opt/cfg/myconfig/
+  10: !ls /opt/cfg/myconfig/j.clients.itsyouonline/
+  11: !cat /opt/cfg/myconfig/j.clients.itsyouonline/main.toml
+  12: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
+  13: jwt
+  14: cl = j.clients.zos.get('kds01', data ={'host':'10.102.178.130'})
+  15: cl.ping()
+  16: cl.client.ping()
+  17: cl.client.bash(ip -br l').get()
+  18: cl.client.bash('ip -br l').get()
+  19: cl.client.bash('hostname').get()
+  20: cl.client.bash('ip -br a').get()
+  21: cl.containers.list()
+  22: cl.disks.list()
+  23: fl =
+  24: fl =
+  25: 'https://hub.grid.tf/delandtj/tfproxy.flist
+  26: fl = "https://hub.grid.tf/delandtj/tfproxy.flist
+  27: fl = "https://hub.grid.tf/delandtj/tfproxy.flist"
+  28: cl.containers.?
+  29: cl.containers.create?
+  30: cl.containers.create('tfproxy',fl,hostname="kdsproxy")
+  31: cl.containers.list()
+  32: cl.containers.get?
+  33: cl.containers.get('tfproxy')
+  34: tfp = cl.containers.get('tfproxy')
+  35: tfp.client.info()
+  36: tfp.client.info.os
+  37: tfp.client.info.os()
+  38: tfp.stop()
+  39: cl.containers.list()
+  40: cl.containers.create('tfproxy',fl,hostname="kdsproxy")
+  41: tfp = cl.containers.get('tfproxy')
+  42: tfp.add_nic?
+  43: tfp.client.info.mem
+  44: tfp.client.info.mem()
+  45: tfp.start?
+  46: tfp.download_content?
+  47: tfp.env.keys()
+  48: tfp.host_network.to_bytes()
+  49: tfp.id()
+  50: tfp.id
+  51: ?
+  52: tfp.name
+  53: tfp.mounts
+  54: tfp.privileged
+  55: tfp.privileged()
+  56: tfp.storage
+  57: tfp.init_processes
+  58: tfp.is_running
+  59: tfp.is_running()
+  60: cl.kernel_args()
+  61: cl.kernel_args
+  62: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
+  63: jwt
