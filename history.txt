@@ -253,3 +253,126 @@ mazraa.config.data_set(instance='mazraa',token='Z8X1tvFZbwpmWarEFFNryU4ASZ7naJtx
   61: cl.kernel_args
   62: jwt = iyo.jwt_get(refreshable=True,scope='user:memberof:threefold.sysadmin')
   63: jwt
+6/1: traefik1 =  j.clients.zos.get('traefik1', data={'host' : '10.102.223.247'})
+ 6/2: traefik1.ping()
+ 6/3: traefik1.containers.list()
+ 6/4: nic = nic = [{'type':'default'}, {'type': 'zerotier', 'id': '
+ 6/5: ! ip a
+ 6/6: !zerotier-cli listnetworks
+ 6/7: c7c8172af1f387a6
+ 6/8: nic = [{'type':'default'}, {'type': 'zerotier', 'id': 'c7c8172af1f387a6'}]
+ 6/9: resp = cl.container.create('https://hub.grid.tf/tf-official-apps/ubuntu-bionic-build.flist',nics=nic,storage='zdb://hub.grid.tf:9900')
+6/10: resp = traefik1.container.create('https://hub.grid.tf/tf-official-apps/ubuntu-bionic-build.flist',nics=nic,storage='zdb://hub.grid.tf:9900')
+6/11: resp = traefik1.containers.create('https://hub.grid.tf/tf-official-apps/ubuntu-bionic-build.flist',nics=nic,storage='zdb://hub.grid.tf:9900')
+6/12: resp = traefik1.containers.create?
+6/13: resp = traefik1.containers.create(name='tfc1',flist='https://hub.grid.tf/tf-official-apps/ubuntu-bionic-build.flist',nics=nic,hostname='tfc1')
+6/14: cid= resp.info
+6/15: cid
+6/16: resp.start()
+6/17: cid= resp.info
+6/18: cid
+6/19: !ps axuww
+6/20: traefik1.client.bash('ps axuww').get()
+6/21: cid
+6/22: resp.is_port_listening()
+6/23: resp.is_running()
+6/24: resp.node.disks.list()
+6/25: j.clients.ssh.new?
+   1: traefik1 =  j.clients.zos.get('traefik1', data={'host' : '10.102.223.247'})
+   2: traefik1.containers.list()
+   3: tfc1 = traefik1.containers.list()[1]
+   4: tfc1
+   5: tfc1.client.ping()
+   6: tfc1.client.bash('ip a').get()
+   7: tfc1.client.bash('apt-get update').get()
+   8: tfc1.client.bash('ls').get()
+   9: tfc1.client.bash('ls -lh').get()
+  10: tfc1.client.bash('apt-cache search traefik').get()
+  11: tfc1.client.system()
+  12: tfc1.client.system?
+  13: tfc1.client.system('ls -l')
+  14: r = tfc1.client.system('ls -l')
+  15: r
+  16: r.get()
+  17: traefik1 =  j.clients.zos.get('traefik1', data={'host' : '10.102.223.247'})
+  18: traefik1.containers.list()
+  19: traefik1.containers.stop(name='tfc1')
+  20: traefik1.containers.node.find_persistance()
+  21: traefik1.containers.node.client.rtinfo
+  22: rt = traefik1.containers.node.client.rtinfo
+  23: rt.start
+  24: rt.start()
+  25: rt.list()
+  26: traefik1.client.bash('ps axuww').get()
+  27: traefik1.addr
+  28: j.clients.zerotier.connections?
+  29: zlist = j.clients.zerotier.connections()
+  30: zlist = j.clients.zerotier.connections.keys()
+  31: zlist
+  32: zlist = j.clients.zerotier.configure?
+  33: zlist = j.clients.zerotier.getall()
+  34: zlist
+  35: traefik1.containers.list()
+  36: traefik1.containers.get(traefik1.containers.list()[1])
+  37: traefik1.containers.get?
+  38: rm = traefik1.containers.get('tfc1')
+  39: rm.init_processes()
+  40: rm.init_processes
+  41: del rm
+  42: node = traefik1.containers.get('tfc1')
+  43: node.stop()
+  44: rm node
+  45: del node
+  46: traefik1.containers.list()
+  47: traefik1.containers.create?
+  48:
+traefik1.containers.create('tfc1','https://hub.grid.tf/delandtj/traefik.flist','tfc1'
+
+
+jlkjlkj)
+  49: nic
+  50: nics
+  51: nic = [{'type':'default'}, {'type': 'zerotier', 'id': 'c7c8172af1f387a6'}]
+  52: traefik1.containers.create('tfc1','https://hub.grid.tf/delandtj/traefik.flist','tfc1',nics=nic)
+  53: tfc1=traefik1.containers.get('tfc1')
+  54: tfc1.client.bash('ls -al').get()
+  55: tfc1.client.bash('ls -al').get()
+  56: tfc1.stop()
+  57: del tfc1
+  58: traefik1.containers.create('tfc1','https://hub.grid.tf/delandtj/traefik.flist','tfc1',nics=nic)
+  59: tfc1=traefik1.containers.get('tfc1')
+  60: tfc1.client.bash('ls -al').get()
+  61: tfc1.client.bash('traefik --help').get()
+  62: tfc1.client.process.list()
+  63: tfc1.client.system?
+  64: tfc1.add_nic?
+  65: nic
+  66: tfc1.client.process.list()
+  67: tfc1.add_nic?
+  68: traefik1.addr
+  69: tfc1.client.bash('traefik --help').get()
+  70: tfc1.client.bash('ip a').get()
+  71: !ip a
+  72: traefik1.client.bash('ip l').get()
+  73: tfc1.upload_content?
+  74: tfc1.client.system('/usr/bin/sshd -D')
+  75: tfc1.client.process.list()
+  76: tfc1.client.job.list()
+  77: traefik1.client.bash('ps axuww').get()
+  78: tfscssh = tfc1.client.system('/usr/sbin/sshd -D')
+  79: tfscssh
+  80: tfscssh.id
+  81: tfscssh.running
+  82: tfscssh.exists
+  83: tfscssh.stream
+  84: tfscssh.stream()
+  85: j.sal_zos.etcd.get()
+  86: j.sal_zos.
+  87: tfscssh = tfc1.client.system('/usr/sbin/sshd -D')
+  88: tfscssh.running()
+  89: tfscssh.running
+  90: traefik1.primitives
+  91: traefik1.client.bash('ps ax').get()
+  92: traefik1.hypervisor.list()
+  93: traefik1.hypervisor.list
+  94: a = traefik1.hypervisor.list()
