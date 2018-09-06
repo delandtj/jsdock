@@ -26,8 +26,8 @@ ssh root@localhost -p 6322
 cd ~
 ./installit.sh
 ```
-this will install jump* robo* digitalme*
-and add js_* to /usr/local/bin
+this will install `jump* robo* digitalme*`
+and add `js_*` to `/usr/local/bin`
 
 when you stop that container, you'll need to reinstall with `./installit.sh`
 
