@@ -98,65 +98,37 @@ for i in trnodes:
             'id': farmerszt},
            {'type': 'zerotier',
             'id': mgmtzt}]
+
     trcontainers.append(
         i.containers.create(
-            'traefik-%s' %
-            n,
+            'traefik-%s' % n,
             'https://hub.grid.tf/delandtj/traefik.flist',
-            nics=nic,
-            hostname='traefik-%s' %
-            n,
+            nics=nic, hostname='traefik-%s' % n,
             env={
                 'ETCDCTL_API': '3'}))
 
+
+# here we wait till they come up, might be interesting to give them a manual
+# ip address, so it's easier... but that doesn't matter
+
+nodes = []
 for i in trcontainers:
-    # get ipv4 addr of mgmt interface in node
+    # get ipv4 addr of mgmt interface in node (take the first one)
+    ipv4 = [ addr for addr in i.client.ip.addr.list(mgmtzt) if IPNetwork(addr).version == 4 ][0]
+    nodes.append(str(IPAddr(ipv4)))
 
     # we only work for 3 machines, so copy-pasta
-traef1 = j.clients.zos.get('traef1', data={'host': hosts[0]})
-traef2 = j.clients.zos.get('traef2', data={'host': hosts[1]})
-traef2 = j.clients.zos.get('traef3', data={'host': hosts[3]})
 
-trcont1_nics = [
-    {'type': 'macvlan', 'id': 'enp6s0', 'hwaddr': '52:54:01:12:00:01',
-     'name': 'public', 'config': {'dhcp': True}},
-    {'type': 'zerotier', 'id': 'c7c8172af1f387a6'},
-    {'type': 'zerotier', 'id': '1d71939404587f3c'}]
-trcont2_nics = [
-    {'type': 'macvlan', 'id': 'enp6s0', 'hwaddr': '52:54:01:12:00:02',
-     'name': 'public', 'config': {'dhcp': True}},
-    {'type': 'zerotier', 'id': 'c7c8172af1f387a6'},
-    {'type': 'zerotier', 'id': '1d71939404587f3c'}]
-trcont3_nics = [
-    {'type': 'macvlan', 'id': 'enp6s0', 'hwaddr': '52:54:01:12:00:03',
-     'name': 'public', 'config': {'dhcp': True}},
-    {'type': 'zerotier', 'id': 'c7c8172af1f387a6'},
-    {'type': 'zerotier', 'id': '1d71939404587f3c'}]
+# trcont1_nics = [
+    # {'type': 'macvlan', 'id': 'enp6s0', 'hwaddr': '52:54:01:12:00:01',
+     # 'name': 'public', 'config': {'dhcp': True}},
+    # {'type': 'zerotier', 'id': 'c7c8172af1f387a6'},
+    # {'type': 'zerotier', 'id': '1d71939404587f3c'}]
 
-trcont1 = traef1.containers.create(
-    'traefik-1',
-    'https://hub.grid.tf/delandtj/traefik.flist',
-    nics=trcont1_nics,
-    hostname='traefik1',
-    env={
-        'ETCDCTL_API': '3'})
-trcont2 = traef1.containers.create(
-    'traefik-2',
-    'https://hub.grid.tf/delandtj/traefik.flist',
-    nics=trcont2_nics,
-    hostname='traefik2',
-    env={
-        'ETCDCTL_API': '3'})
-trcont3 = traef1.containers.create(
-    'traefik-3',
-    'https://hub.grid.tf/delandtj/traefik.flist',
-    nics=trcont2_nics,
-    hostname='traefik3',
-    env={
-        'ETCDCTL_API': '3'})
-
-# Ok, now get ip addrs of sysadmin interface of containers
-#
-mgmtip1 = [addr for addr in trcont1.client.ip.addr.list( mgmtnic) if IPNetwork(addr).version == 4][0]
-mgmtip2 = [addr for addr in trcont2.client.ip.addr.list( mgmtnic) if IPNetwork(addr).version == 4][0]
-mgmtip3 = [addr for addr in trcont3.client.ip.addr.list( mgmtnic) if IPNetwork(addr).version == 4][0]
+# trcont1 = traef1.containers.create(
+    # 'traefik-1',
+    # 'https://hub.grid.tf/delandtj/traefik.flist',
+    # nics=trcont1_nics,
+    # hostname='traefik1',
+    # env={
+        # 'ETCDCTL_API': '3'})
