@@ -4,7 +4,6 @@ from netaddr.ip import IPNetwork
 globals()['IPNetwork'] = locals()['IPNetwork']
 
 # config
-nodes = ['192.168.64.240']
 hosts = ['10.250.234.133', '10.250.123.223', '10.250.10.21']
 letsencrypt_email = "kristof@vmlinuz.be"
 recursive_resolvers = "8.8.8.8:53 1.1.1.1:53"
@@ -16,61 +15,6 @@ mgmtzt = '1d71939404587f3c'
 
 
 
-# etcd
-listen_peer_urls = ", ".join(["http://%s:2380" % x for x in nodes])
-listen_client_urls = ", ".join(["http://%s:2379" % x for x in nodes])
-initial_advertise_peer_urls = listen_peer_urls
-advertise_client_urls = listen_client_urls
-
-etcdconfig = """
-# /etc/etcd.conf
-name: '{0}'
-data-dir: '{1}'
-listen-peer-urls: {2}
-listen-client-urls: {3}
-initial-advertise-peer-urls: {4}
-advertise-client-urls: {5}
-""".format('proxy-etcd',
-           '/etcd-data',
-           listen_peer_urls,
-           listen_client_urls,
-           initial_advertise_peer_urls,
-           advertise_client_urls)
-
-# traefik
-endpoints = ",".join(["%s:2379" % x for x in nodes])
-traefikconfig = """
-# /etc/traefik.toml
-[etcd]
-endpoint = {}
-watch = true
-prefix = "/traefik"
-
-[acme]
-email = "{}"
-storageFile = "/etc/acme.json"
-entryPoint = "https"
-
-""".format(endpoints, letsencrypt_email)
-
-# Coredns
-dnsformat = ", ".join(["%s:53" % x for x in nodes])
-
-basezone = """
-# /etc/coredns.conf
-. {{
-    etcd . {{
-        stubzones
-        path /skydns
-        endpoint {0}
-        upstream {1}
-    }}
-    cache 160 skydns.local
-    loadbalance
-    proxy . {1}
-}}
-
-""".format(" ".join(["http://%s:2379" % x for x in nodes]), recursive_resolvers)
 
 
 print(etcdconfig)
@@ -111,13 +55,80 @@ for i in trnodes:
 # here we wait till they come up, might be interesting to give them a manual
 # ip address, so it's easier... but that doesn't matter
 
-nodes = []
+mgmtcontainerips = []
 for i in trcontainers:
     # get ipv4 addr of mgmt interface in node (take the first one)
     ipv4 = [ addr for addr in i.client.ip.addr.list(mgmtzt) if IPNetwork(addr).version == 4 ][0]
-    nodes.append(str(IPAddr(ipv4)))
+    mgmtcontainerips.append(str(IPAddr(ipv4)))
 
-    # we only work for 3 machines, so copy-pasta
+# create files for /etc/etcd.conf , /etc/traefik.toml and /etc/coredns.conf
+# etcd
+listen_peer_urls = ", ".join(["http://%s:2380" % x for x in mgmtcontainerips])
+listen_client_urls = ", ".join(["http://%s:2379" % x for x in mgmtcontainerips])
+initial_advertise_peer_urls = listen_peer_urls
+advertise_client_urls = listen_client_urls
+
+etcdconfig = """
+# /etc/etcd.conf
+name: '{0}'
+data-dir: '{1}'
+listen-peer-urls: {2}
+listen-client-urls: {3}
+initial-advertise-peer-urls: {4}
+advertise-client-urls: {5}
+""".format('proxy-etcd',
+           '/etcd-data',
+           listen_peer_urls,
+           listen_client_urls,
+           initial_advertise_peer_urls,
+           advertise_client_urls)
+
+# traefik
+endpoints = ",".join(["%s:2379" % x for x in mgmtcontainerips])
+
+traefikconfig = """
+# /etc/traefik.toml
+[web]
+address = ":8080"
+[etcd]
+endpoint = {}
+watch = true
+prefix = "/traefik"
+useapiv3 = true
+
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+      entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+""".format(endpoints)
+
+
+
+# Coredns
+
+basezone = """
+# /etc/coredns.conf
+. {{
+    etcd . {{
+        stubzones
+        path /skydns
+        endpoint {0}
+        upstream {1}
+    }}
+    cache 160 skydns.local
+    loadbalance
+    proxy . {1}
+}}
+
+""".format(" ".join(["http://%s:2379" % x for x in mgmtcontainerips]), recursive_resolvers)
+
+
 
 # trcont1_nics = [
     # {'type': 'macvlan', 'id': 'enp6s0', 'hwaddr': '52:54:01:12:00:01',
