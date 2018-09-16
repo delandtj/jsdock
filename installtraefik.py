@@ -4,23 +4,20 @@ from netaddr.ip import IPNetwork
 globals()['IPNetwork'] = locals()['IPNetwork']
 
 # config
-hosts = ['10.250.234.133', '10.250.123.223', '10.250.10.21']
+hosts = ['10.102.221.172', '10.102.223.247']
+# hosts = ['10.250.234.133', '10.250.123.223', '10.250.10.21']
 letsencrypt_email = "kristof@vmlinuz.be"
 recursive_resolvers = "8.8.8.8:53 1.1.1.1:53"
-mgmtnic = 'ztrf24x2zy'
 hwbase = '54:52:00:01:00:'
+
+domain = "arakoon.org"
 
 farmerszt = 'c7c8172af1f387a6'
 mgmtzt = '1d71939404587f3c'
 
 
-
-
-
-print(etcdconfig)
-print(traefikconfig)
-print(basezone)
-
+# setup nodes
+# TODO : barf if error
 trnodes = []
 trcontainers = []
 for i in hosts:
@@ -54,20 +51,27 @@ for i in trnodes:
 
 # here we wait till they come up, might be interesting to give them a manual
 # ip address, so it's easier... but that doesn't matter
+# TODO try until mgmtzt interface got an ip
+
+mgmtztiface = [x['portDeviceName'] for x in
+               trcontainers[0].client.zerotier.list() if x['id'] == mgmtzt]
 
 mgmtcontainerips = []
 for i in trcontainers:
     # get ipv4 addr of mgmt interface in node (take the first one)
-    ipv4 = [ addr for addr in i.client.ip.addr.list(mgmtzt) if IPNetwork(addr).version == 4 ][0]
-    mgmtcontainerips.append(str(IPAddr(ipv4)))
+    ipv4 = [addr for addr in i.client.ip.addr.list(
+        mgmtzt) if IPNetwork(addr).version == 4][0]
+    mgmtcontainerips.append(str(IPNetwork(ipv4).ip))
 
-# create files for /etc/etcd.conf , /etc/traefik.toml and /etc/coredns.conf
+# create files for /etc/etcd.conf, /etc/traefik.toml and /etc/coredns.conf
 # etcd
 listen_peer_urls = ", ".join(["http://%s:2380" % x for x in mgmtcontainerips])
-listen_client_urls = ", ".join(["http://%s:2379" % x for x in mgmtcontainerips])
+listen_client_urls = ", ".join(
+    ["http://%s:2379" % x for x in mgmtcontainerips])
 initial_advertise_peer_urls = listen_peer_urls
 advertise_client_urls = listen_client_urls
 
+# Etcd config
 etcdconfig = """
 # /etc/etcd.conf
 name: '{0}'
@@ -96,7 +100,6 @@ watch = true
 prefix = "/traefik"
 useapiv3 = true
 
-
 [entryPoints]
   [entryPoints.http]
   address = ":80"
@@ -108,14 +111,33 @@ useapiv3 = true
 
 """.format(endpoints)
 
-
-
 # Coredns
+dbfile = """
+$TTL 86400
+$ORIGIN arakoon.org.
+@  1D  IN  SOA ns.{0}. hostmaster.{0}. (
+            2002022401 ; serial
+            3H ; refresh
+            15 ; retry
+            1w ; expire
+            3h ; nxdomain ttl
+           )
+        IN  NS     ns1.{0}.
+        IN  NS     ns2.{0}.
+
+        IN  MX  30 aspmx5.googlemail.com.
+        IN  MX  30 aspmx4.googlemail.com.
+        IN  MX  20 alt1.aspmx.l.google.com.
+        IN  MX  30 aspmx2.googlemail.com.
+        IN  MX  30 aspmx3.googlemail.com.
+        IN  MX  20 alt2.aspmx.l.google.com.
+        IN  MX  10 aspmx.l.google.com.
+""".format(domain)
 
 basezone = """
 # /etc/coredns.conf
 . {{
-    etcd . {{
+    etcd {2} {{
         stubzones
         path /skydns
         endpoint {0}
@@ -126,20 +148,18 @@ basezone = """
     proxy . {1}
 }}
 
-""".format(" ".join(["http://%s:2379" % x for x in mgmtcontainerips]), recursive_resolvers)
+""".format(" ".join(["http://%s:2379" % x for x in mgmtcontainerips]),
+           recursive_resolvers, domain)
 
+# get configs over, restart services
 
-
-# trcont1_nics = [
-    # {'type': 'macvlan', 'id': 'enp6s0', 'hwaddr': '52:54:01:12:00:01',
-     # 'name': 'public', 'config': {'dhcp': True}},
-    # {'type': 'zerotier', 'id': 'c7c8172af1f387a6'},
-    # {'type': 'zerotier', 'id': '1d71939404587f3c'}]
-
-# trcont1 = traef1.containers.create(
-    # 'traefik-1',
-    # 'https://hub.grid.tf/delandtj/traefik.flist',
-    # nics=trcont1_nics,
-    # hostname='traefik1',
-    # env={
-        # 'ETCDCTL_API': '3'})
+for i in trcontainers:
+    i.upload_content('/etc/traefik.toml', traefikconfig)
+    i.upload_content('/etc/etcd.conf', etcdconfig)
+    i.upload_content('/etc/coredns.conf', basezone)
+    i.upload_content('/etc/db.zone.{}', dbfile)
+    # kill them, CoreX will restart them
+    pslist = [proc['pid'] for proc in i.client.process.list()
+              if proc['name'] in['traefik', 'coredns', 'etcd']]
+    for p in pslist:
+        i.client.process.kill(p)
